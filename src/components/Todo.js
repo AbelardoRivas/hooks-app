@@ -3,6 +3,7 @@ import axios from 'axios';
 
 const todo = props => {
     const [todoName, setTodoName] = useState('');
+    const [submittedTodo, setSubmittedTodo] = useState(null);
     const [todoList, setTodoList] = useState([]);
 
     useEffect(() => {
@@ -20,15 +21,23 @@ const todo = props => {
         };
     }, [todoName]);
 
+    useEffect(() => {
+        if (submittedTodo) {
+            setTodoList(todoList.concat(submittedTodo));
+        }
+    }, [submittedTodo]);
+
     const inputChangeHandler = (event) => {
         setTodoName(event.target.value);
     };
 
     const todoAddHandler = () => {
-        setTodoList(todoList.concat(todoName));
         axios.post('https://hooks-a92ee.firebaseio.com/todos.json', {name: todoName})
             .then(res => {
-                console.log(res);
+                setTimeout(() => {
+                    const todoItem = {id: res.data.name, name: todoName};
+                    setSubmittedTodo(todoItem);
+                }, 3000);
             }).catch(err => {
                 console.log(err);
             });
