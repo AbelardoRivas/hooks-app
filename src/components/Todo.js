@@ -15,7 +15,10 @@ const todo = props => {
             }
             setTodoList(todos);
         });
-    }, []);
+        return () => {
+            console.log('Cleanup');
+        };
+    }, [todoName]);
 
     const inputChangeHandler = (event) => {
         setTodoName(event.target.value);
