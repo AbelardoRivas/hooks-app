@@ -1,10 +1,11 @@
-import React, { useState, useEffect, useReducer } from 'react';
+import React, { useEffect, useReducer, useRef } from 'react';
 import axios from 'axios';
 
 const todo = props => {
-    const [todoName, setTodoName] = useState('');
+    //const [todoName, setTodoName] = useState('');
     //const [submittedTodo, setSubmittedTodo] = useState(null);
     //const [todoList, setTodoList] = useState([]);
+    const todoInputRef = useRef();
 
     const todoListReducer = (state, action) => {
         switch (action.type) {
@@ -34,7 +35,7 @@ const todo = props => {
         return () => {
             console.log('Cleanup');
         };
-    }, [todoName]);
+    }, []);
 
     /*useEffect(() => {
         if (submittedTodo) {
@@ -42,11 +43,13 @@ const todo = props => {
         }
     }, [submittedTodo]);*/
 
-    const inputChangeHandler = (event) => {
+    /*const inputChangeHandler = (event) => {
         setTodoName(event.target.value);
-    };
+    };*/
 
     const todoAddHandler = () => {
+        const todoName = todoInputRef.current.value;
+
         axios.post('https://hooks-a92ee.firebaseio.com/todos.json', {name: todoName})
             .then(res => {
                 setTimeout(() => {
@@ -70,8 +73,7 @@ const todo = props => {
         <input 
             type="text" 
             placeholder="Todo" 
-            onChange={inputChangeHandler} 
-            value={todoName} 
+            ref={todoInputRef}
         />
         <button type="button" onClick={todoAddHandler}>Add</button>
         <ul>
